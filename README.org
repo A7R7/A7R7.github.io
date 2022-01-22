@@ -1,0 +1,21 @@
+#+title: A "theme" for a minimal Hugo site
+
+This Hugo theme is a simple light weight theme to help debug basic
+problems with Hugo template or to create a reproducible example (and
+thus the name of the theme *mwe* or /minimum workable example/) when
+submitting an issue upstream to [[https://github.com/gohugoio/hugo][Hugo]].
+
+* Custom site parameters
+This theme accepts 2 custom site parameters:
+
+- ~site.Params.subTitle~ :: Subtitle of the site
+- ~site.Params.source.url~ :: Link to the source git repo of the Hugo site
+** Example
+
+#+begin_src conf-toml
+[Params]
+  subTitle = "Minimum working examples for testing out Hugo issues and features"
+
+  [Params.source]
+    url = "https://gitlab.com/hugo-mwe/hugo-mwe"
+#+end_src

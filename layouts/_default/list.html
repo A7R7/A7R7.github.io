@@ -1,0 +1,26 @@
+{{ define "main" }}
+
+<h1>Posts in ‘{{ .Section }}’</h1>
+
+<ul>
+    {{ range .RegularPages }}
+        <li>
+            <a href='{{ .Permalink }}'> {{ .Title }}</a>
+            {{ .Description | markdownify }}
+        </li>
+    {{ end }}
+</ul>
+
+{{ with .Content }}
+    {{ . }}
+{{ end }}
+
+{{ end }}
+
+{{ define "footer" }}
+
+<hr>
+<a href="{{ site.BaseURL }}">Back to Home</a>
+{{ partial "source_code" (dict "page" . "prefix" "|") }}
+
+{{ end }}
