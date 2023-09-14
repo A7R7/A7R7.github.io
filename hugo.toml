@@ -1,0 +1,8 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = "A7R7\'s blogs"
+theme = "ananke"
+summaryLength = 42
+
+[markup.goldmark.renderer]
+  unsafe = true
