@@ -3,7 +3,7 @@ baseURL = "http://example.org/"
 defaultContentLanguage = "en"
 # language code
 languageCode = "en"
-title = "My New Hugo Site"
+title = "A7R7's notes"
 
 # Change the default theme to be use when building the site with Hugo
 theme = "DoIt"
