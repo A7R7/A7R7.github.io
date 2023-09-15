@@ -1,8 +1,64 @@
-baseURL = 'http://example.org/'
-languageCode = 'en-us'
-title = "A7R7\'s blogs"
-theme = "ananke"
-summaryLength = 42
+# basic configuration
+baseURL = "http://example.org/"
+builddrafts = false
+canonifyurls = false
+languageCode = "en-US"
+# [en, zh-cn, fr, ...] determines default content language
+defaultContentLanguage = "en"
+# language code
+title = "My New Hugo Site"
 
-[markup.goldmark.renderer]
-  unsafe = true
+# Change the default theme to be use when building the site with Hugo
+# theme = ["DoIt"]
+
+[module]
+  [[module.imports]]
+    path = 'github.com/HEIGE-PCloud/DoIt'
+    disable = true
+  [[module.imports]]
+    path = 'gitlab.com/kaushalmodi/hugo-mwe-theme'
+    disable = false
+
+[params]
+  # DoIt theme version
+  version = "0.2.X"
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    # you can add extra information before the name (HTML format is supported), such as icons
+    pre = ""
+    # you can add extra information after the name (HTML format is supported), such as icons
+    post = ""
+    name = "Posts"
+    url = "/posts/"
+    # title will be shown when you hover on this menu link
+    title = ""
+    weight = 1
+  [[menu.main]]
+    identifier = "tags"
+    pre = ""
+    post = ""
+    name = "Tags"
+    url = "/tags/"
+    title = ""
+    weight = 2
+  [[menu.main]]
+    identifier = "categories"
+    pre = ""
+    post = ""
+    name = "Categories"
+    url = "/categories/"
+    title = ""
+    weight = 3
+
+# Markup related configuration in Hugo
+[markup]
+  # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+  [markup.highlight]
+    # false is a necessary configuration (https://github.com/dillonzq/LoveIt/issues/158)
+    noClasses = false
+  [markup.goldmark.renderer]
+    unsafe = true
+
+
