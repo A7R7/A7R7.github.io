@@ -1,9 +1,0 @@
-[submodule "themes/mini"]
-	path = themes/mini
-	url = https://github.com/nodejh/hugo-theme-mini.git
-[submodule "themes/ananke"]
-	path = themes/ananke
-	url = https://github.com/theNewDynamic/gohugo-theme-ananke.git
-[submodule "themes/DoIt"]
-	path = themes/DoIt
-	url = https://github.com/HEIGE-PCloud/DoIt
