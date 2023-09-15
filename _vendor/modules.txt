@@ -1,1 +1,1 @@
-# github.com/HEIGE-PCloud/DoIt v0.4.0
+# gitlab.com/kaushalmodi/hugo-mwe-theme v0.1.1
