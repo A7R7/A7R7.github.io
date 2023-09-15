@@ -3,7 +3,7 @@
   "baseUrl": ".",
   "paths": {
    "*": [
-    "../_vendor/github.com/HEIGE-PCloud/DoIt/assets/*"
+    "../themes/DoIt/assets/*"
    ]
   }
  }

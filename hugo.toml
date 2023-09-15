@@ -9,15 +9,15 @@ defaultContentLanguage = "en"
 title = "My New Hugo Site"
 
 # Change the default theme to be use when building the site with Hugo
-# theme = ["DoIt"]
+theme = ["hugo-mwe-theme"]
 
-[module]
-  [[module.imports]]
-    path = 'github.com/HEIGE-PCloud/DoIt'
-    disable = true
-  [[module.imports]]
-    path = 'gitlab.com/kaushalmodi/hugo-mwe-theme'
-    disable = false
+# [module]
+#   [[module.imports]]
+#     path = 'github.com/HEIGE-PCloud/DoIt'
+#     disable = true
+#   [[module.imports]]
+#     path = 'gitlab.com/kaushalmodi/hugo-mwe-theme'
+#     disable = false
 
 [params]
   # DoIt theme version
