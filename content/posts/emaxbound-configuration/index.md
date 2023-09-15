@@ -5,11 +5,10 @@ description: "My GNU Emacs's literate config"
 publishDate: 2023-07-24
 tags: ["Emacs", "Org-mode"]
 draft: false
+featuredImage: "Emacsbound.png"
 ---
 
 <!--more-->
-
-<img alt="EmaxBound" src="assets/EmacsBound.svg" width="100%">
 
 ---
 
@@ -22,9 +21,7 @@ draft: false
 
 ## Screenshots {#screenshots}
 
-<img alt="Dashboard" src="assets/dashboard.png" width="80%">
-
-<img alt="Org Mode" src="assets/org-mode.png" width="80%">
+{{< figure src="dashboard.png" >}}
 
 
 ## Introduction {#introduction}

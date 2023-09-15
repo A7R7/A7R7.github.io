@@ -3,7 +3,6 @@ title: "EmaxBound Configuration"
 authors: ["A7R7"]
 description: "My GNU Emacs's literate config"
 publishDate: 2023-07-24
-tags: ["Emacs", "Org-mode"]
 draft: false
 ---
 

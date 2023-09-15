@@ -1,23 +1,13 @@
-# basic configuration
 baseURL = "http://example.org/"
-builddrafts = false
-canonifyurls = false
-languageCode = "en-US"
 # [en, zh-cn, fr, ...] determines default content language
 defaultContentLanguage = "en"
 # language code
+languageCode = "en"
 title = "My New Hugo Site"
 
 # Change the default theme to be use when building the site with Hugo
-theme = ["hugo-mwe-theme"]
+theme = "DoIt"
 
-# [module]
-#   [[module.imports]]
-#     path = 'github.com/HEIGE-PCloud/DoIt'
-#     disable = true
-#   [[module.imports]]
-#     path = 'gitlab.com/kaushalmodi/hugo-mwe-theme'
-#     disable = false
 
 [params]
   # DoIt theme version
