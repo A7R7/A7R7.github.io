@@ -4,7 +4,7 @@ baseURL = "https://a7r7.me"
 defaultContentLanguage = "en"
 # website title
 # 网站标题
-title = ""
+title = "A7R7's Notes"
 
 # whether to use robots.txt
 # 是否使用 robots.txt
