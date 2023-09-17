@@ -18,9 +18,6 @@ featuredImage: "Emacsbound.png"
 
 <a href="https://en.wikipedia.org/wiki/Linux"><img alt="Linux" src="https://img.shields.io/badge/linux-FCC624?logo=linux&logoColor=black"/></a>
 
-
-## Screenshots {#screenshots}
-
 {{< figure src="dashboard.png" >}}
 
 
@@ -46,44 +43,74 @@ make bootstrap       # bootstrap collective or new drones
 Last, run `emacs --init-directory=<path-of-the-repo>` (replace the path).
 
 
-### How I built this config from seed {#how-i-built-this-config-from-seed}
+### How I built this config from the seed {#how-i-built-this-config-from-the-seed}
 
 The whole config structure is built upon [emacscollective/emacs.g](https://github.com/emacscollective/emacs.g).
 It is a starter-kit using borg as the package manager, which utilizes git submodules to maintain all its packages.
-Check [Bootstrapping-using-a-seed](https://emacsmirror.net/manual/borg/Bootstrapping-using-a-seed.html) from its [manual](https://emacsmirror.net/manual/borg/) to see how to build the config structure.
+Check [Bootstrapping-using-a-seed](https://emacsmirror.net/manual/borg/Bootstrapping-using-a-seed.html) from Borg's manual to see how to build the config structure.
 
--   Firstly, I generated the structure from the seed.
+-   First, I generated the structure from the seed.
 -   Then, I copied and pasted all the original code from init.el and early-init.el to this org file.
 -   Last, most further config does not go beyond the following 3 steps:
     -   Run [M-x borg-assimilate](< borg-assimilate>) and input the name of the package to install this package.
-    -   Write config codes into this org file, then run [M-x org-babel-tangle](org-babel-tangle) so that emacs writes the codes into the corresponding file. (Tangle is done automatically on save)
+    -   Write config codes into this org file, then run [M-x org-babel-tangle](org-babel-tangle) so that emacs writes the codes into the corresponding file. (the org-auto-tangle package that I installed enables auto tangling on saving org file)
     -   For some packages, specify its load path or build method in `.borgconfig` for them to be load or built as expected. This is auto tangled as well.
 
 
+### Why it's called EmaxBound {#why-it-s-called-emaxbound}
+
+The name "EmaxBound" is inspired by "Starbound", a game I used to play and I love it.
+Why it is "EmaxBound" but not "EmacsBound" ?
+
+-   "Emax" has the same number of characters of "Star"
+-   So that the logo I drawed (mimicing the style of starbound) looks balanced
+-   "Emaxbound" means "Explore the maxium bound of emacs"
+
+
+### Why not other popular emacs distros {#why-not-other-popular-emacs-distros}
+
+-   Doom emacs, spacemacs and other emacs "distros", are pretty good. They did a good job in "working out of the box". However, their complexities is blocking me from gaining a further understanding of emacs and elisp.
+-   Meanwhile, it's much harder to do customizations on those complex systems, especially when you do not know what it already have. However, self-configured emacs does not have this problem.
+-   Those distros get updates from time to time. What if one update breaks your workflow?
+
+
+### Why a literate config {#why-a-literate-config}
+
+Using literate configuration in org-mode has many benefits.
+
+-   Literate programming just feels so good in emacs.
+    -   You know what you code does, because there're descriptions of different styles around the code. Code comments cannot achieve 100% of this.
+    -   Easy jumping to the target code among those foldable outlines. No need to split a file into more.
+    -   Looks good, feels good.
+-   The org file can be used as readme in github/gitlab, which shows all your codes.
+-   The org file can be published as blogs. For example, I use ox-hugo to generate markdown files, and later hugo renders it to html files. This is where this blog comes from.
+
+
 ### References {#references}
+
+Credits goes to the authors of those emacs configs that I referenced during the build-up of my emacs config file.
 
 -   [Luca's vanilla-emacs](https://github.com/lccambiaghi/vanilla-emacs) (2023) detailed org config file.
 -   [DistroTube's Configuring Emacs](https://gitlab.com/dwt1/configuring-emacs) (2023) easy to follow.
 -   [seagle0128's Centaur Emacs](https://github.com/seagle0128/.emacs.d) (2023) be morden.
 -   [Daviwell's Emacs from scratch](https://github.com/daviwil/emacs-from-scratch) (2021) intuitive.
--   [lijigang's 100-questions-about-orgmode](https://github.com/lijigang/100-questions-about-orgmode) (2023) for org mode of course.
 -   [Doom Emacs](https://github.com/doomemacs/doomemacs) (2023) Some best practices.
 -   [Dakra's Dmacs](https://github.com/dakra/dmacs) (2023) Another Emacs Literate configuration with borg
 -   [DogLooksGood's Meomacs](https://github.com/DogLooksGood/meomacs) (2023) Meow modal editing, emacs native friendly
 
 **NOTE**: the year number after link equals to
+min (last time the config get's updated, last time I refered to the config)
 
--   min (last time the config get's updated, last time I refered to the config)
 
+## Early Init {#early-init}
 
-## Earliest birds {#earliest-birds}
+**NOTE**: elisp codes under this headline are tangled to early-init.el.
 
-**NOTE**: codes under this heading are tangled to early-init.el
-
-Disable byte-compile for early-init.el, according to the [emacs manual](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html).
+Emacs load early-init.el before init.el.
+Disable byte-compile for early-init.el. According to the [emacs manual](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html), byte-compiling the init does not startup very much, and often leads to problems when you forget to recompile the file. Also, from my experience, it may lead to bugs that do not happen when not using byte-compile.
 
 ```elisp
-;;; early-init.el --- earliest birds  -*- lexical-binding: t; no-byte-compile: t -*-
+;;; -*- lexical-binding: t; no-byte-compile: t -*-
 ```
 
 Disable tool-bar, menu-bar and scroll-bar before they're loaded.
@@ -94,7 +121,7 @@ Disable tool-bar, menu-bar and scroll-bar before they're loaded.
 (scroll-bar-mode -1)
 ```
 
-Borg seed generated configs.
+Below codes belongs to the original Borg seed.
 
 ```elisp
 (setq load-prefer-newer t)
@@ -111,28 +138,24 @@ Borg seed generated configs.
 
 (with-eval-after-load 'package
   (add-to-list 'package-archives (cons "melpa" "https://melpa.org/packages/") t))
-;; Local Variables:
-;; no-byte-compile: t
-;; indent-tabs-mode: nil
-;; End:
-;;; early-init.el ends here
 ```
 
 
-## Early birds {#early-birds}
+## Init {#init}
 
-**NOTE**: Starting from here, elisp codes are tangled to init.el !
+**NOTE**: Starting from here, elisp codes are tangled to init.el
 
-Disable byte compile for init.el, according to the [emacs manual](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html).
+After loading early-init.el, emacs begin to load init.el.
+
+Disable byte compile for init.el, same reason of early-init.el.
 
 ```elisp
-;;; init.el --- user-init-file
+;;; -*- lexical-binding: t; no-byte-compile: t -*-
 ```
 
 Calculating time used loading emacs excutable, as well as setting some variables.
 
 ```elisp
-;;; -*- lexical-binding: t; no-byte-compile: t -*-
 (progn ;     startup
   (defvar before-user-init-time (current-time)
     "Value of `current-time' when Emacs begins loading `user-init-file'.")
@@ -181,7 +204,7 @@ Calculating time used loading emacs excutable, as well as setting some variables
 
 ### Use-package {#use-package}
 
-Use-package is built-in since emacs-29! Uncomment the comment if running below29.
+Use-package is built-in since emacs-29. Uncomment the comment if running below29.
 
 ```elisp
 (setq use-package-verbose t)
@@ -193,7 +216,7 @@ Use-package is built-in since emacs-29! Uncomment the comment if running below29
 
 ### Dash {#dash}
 
-[Dash](https://github.com/magnars/dash.el) is a modern list library for Emacs See its overview at [dash.el - functions](https://github.com/magnars/dash.el#functions).
+[Dash](https://github.com/magnars/dash.el) is a modern list library for Emacs. See its overview at [dash.el - functions](https://github.com/magnars/dash.el#functions).
 	 `Dash-Fontify mode` is a buffer-local minor mode intended for Emacs Lisp buffers.  Enabling it causes the special variables bound in anaphoric Dash macros to be fontified.  These anaphoras include ‘it’, ‘it-index’, ‘acc’, and ‘other’.  In older Emacs versions which do not dynamically detect macros, Dash-Fontify mode additionally fontifies Dash macro calls.
 
 ```elisp
@@ -240,9 +263,7 @@ Dash needs some tweaks to be built
 
 ### Epkg {#epkg}
 
--   [Epkg](https://github.com/emacscollective/epkg) allows you browse the Emacsmirror package database. We're using emacs &gt;= 29 which has builtin support for sqlite, so we let epkg-database-connector to use builtin sqlite.
-
-<!--listend-->
+[Epkg](https://github.com/emacscollective/epkg) allows you browse the Emacsmirror package database. We're using emacs &gt;= 29 which has builtin support for sqlite, so we let epkg-database-connector to use builtin sqlite.
 
 ```elisp
 (use-package epkg
@@ -258,7 +279,7 @@ Dash needs some tweaks to be built
 
 ### Custom {#custom}
 
-[Custom](https://www.emacswiki.org/emacs/CustomizingAndSaving#Customize), the customize system of emacs. Set the file path used for storing customization information.
+[Custom](https://www.emacswiki.org/emacs/CustomizingAndSaving#Customize) is a built-in package, the customize system of emacs. Set the file path used for storing customization information here.
 
 ```elisp
 (use-package custom
@@ -284,7 +305,7 @@ Server allows Emacs to operate as a server for other processes. Built in.
 
 ### Org {#org}
 
-[Org-9.7](https://git.tecosaur.net/tec/org-mode) (preview) did some overhaul to org-latex-preview in org mode. Load External org before the built in org is loaded.
+[Org-9.7](https://git.tecosaur.net/tec/org-mode) did some overhaul to org-latex-preview in org mode. Load External org before the built in org is loaded.
 
 ```elisp
 (use-package org)
@@ -304,13 +325,13 @@ According to the installation manual of org, we need to make autoloads before co
 ```
 
 
-### End of early birds {#end-of-early-birds}
+### End of core units {#end-of-core-units}
 
-Calculate load time.
+Calculate loading time of core units.
 
 ```elisp
 (progn ;     startup
-  (message "Loading early birds...done (%fs)"
+  (message "Loading core units...done (%fs)"
      (float-time (time-subtract (current-time) before-user-init-time))))
 ```
 
@@ -2551,7 +2572,7 @@ This package provides visual alignment for Org Mode, Markdown and table.el table
 
 [Org-appear](https://github.com/awth13/org-appearAutomatically) disaply emphasis markers and links when the cursor is on them.
 
-```emacs-lisp
+```elisp
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
   :init
@@ -2584,7 +2605,7 @@ This package provides visual alignment for Org Mode, Markdown and table.el table
 
 [Org-auto-tangle](https://github.com/yilkalargaw/org-auto-tangle) Automatically and Asynchronously tangles org files on save.
 Adding the option `#+auto_tangle: t` in an org file to auto-tangle.
-Or setting the `org-auto-tangle-default` variable to t to configure auto-tangle as the default behavior for all org buffers. In this case, it can be disabled for some buffers by adding `#+auto_tangle:nil`.
+Or setting `org-auto-tangle-default` to t to configure auto-tangle as the default behavior for all org buffers. In this case, it can be disabled for some buffers by adding `#+auto_tangle: nil`.
 
 ```elisp
 (use-package org-auto-tangle
@@ -2683,6 +2704,7 @@ Disabled cause org-modern already does the job.
 ```elisp
 (use-package org-roam
 :after org
+:defer t
 :init
   (setq org-roam-directory (file-truename "~/roam"))
   (setq org-roam-v2-ack t)
@@ -3017,20 +3039,23 @@ Code under :config is taken from <https://emacs-china.org/t/org-mode-latex-mode/
 
 ```elisp
 (use-package ox
-  :config
-  (setq org-export-with-toc t
+:after org
+:config
+  (setq
+    org-export-with-toc t
     org-export-with-tags 'not-in-toc
     org-export-with-drawers nil
     org-export-with-priority t
     org-export-with-footnotes t
     org-export-with-smart-quotes t
     org-export-with-section-numbers t
-    org-export-with-sub-superscripts '{})
-  (setq org-export-use-babel t
+    org-export-with-sub-superscripts '{}
+    org-export-use-babel t
     org-export-headline-levels 9
     org-export-coding-system 'utf-8
-    org-export-with-broken-links 'mark)
+    org-export-with-broken-links 'mark
   )
+)
 ```
 
 
@@ -3158,12 +3183,13 @@ General steps to publish a blog using hugo in emacs includes:
 
 ```elisp
 (use-package ox-hugo
-  :after ox
-  :commands org-hugo
-  :init (setq org-hugo-base-dir "~/Blog"
-              org-hugo-front-matter-format "yaml"
-        )
-  :config
+:commands (org-hugo-export-as-md org-hugo-export-to-md)
+:init
+  (setq org-hugo-base-dir "~/Blog"
+        org-hugo-front-matter-format "yaml"
+  )
+:config
+
   (defun org-hugo-new-subtree-post-capture-template ()
     "Returns `org-capture' template string for new Hugo post.
      See `org-capture-templates' for more information."
@@ -3256,6 +3282,7 @@ Run `M-x pdf-tools-install` to install libraries needed.
 
 ```elisp
 (use-package elfeed
+:defer t
 :config
   (setq elfeed-feeds '(
 ("http://nullprogram.com/feed/" blog emacs)
@@ -3338,7 +3365,7 @@ tweaks to build eaf
 ```
 
 
-## Tequila worms {#tequila-worms}
+## End {#end}
 
 ```elisp
 (progn ;     startup
