@@ -47,7 +47,7 @@ cacheRemoteImages = false
   [header.title]
     # URL of the LOGO
     # LOGO 的 URL
-    logo = "insane.svg"
+    logo = "favicon.svg"
     # title name
     # 标题名称
     name = "A7R7's Notes"

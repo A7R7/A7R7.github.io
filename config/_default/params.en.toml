@@ -3,7 +3,7 @@
 description = "A7R7's Notes"
 # site keywords
 # 网站关键词
-keywords = ["A7R7", "a7r7", "Blog", "Hugo"]
+keywords = ["A7R7", "a7r7", "blog", "notes"]
 # App icon config
 # 应用图标配置
 [app]
@@ -15,7 +15,7 @@ keywords = ["A7R7", "a7r7", "Blog", "Hugo"]
   noFavicon = false
   # modern SVG favicon to use in place of older style .png and .ico files
   # 更现代的 SVG 网站图标, 可替代旧的 .png 和 .ico 文件
-  svgFavicon = "insane.svg"
+  svgFavicon = ""
   # Safari mask icon color
   # Safari 图标颜色
   iconColor = "#5bbad5"
