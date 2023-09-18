@@ -399,7 +399,7 @@ cacheRemoteImages = false
     # Utterances comment config (https://utteranc.es/)
     # Utterances comment 评论系统设置 (https://utteranc.es/)
     [page.comment.utterances]
-      enable = true
+      enable = false
       # owner/repo
       repo = "Hugo-DoIt/utterances-comments"
       issueTerm = "pathname"
@@ -419,10 +419,10 @@ cacheRemoteImages = false
     # Vssue comment config (https://vssue.js.org//)
     # Vssue comment 评论系统设置 (https://vssue.js.org//)
     [page.comment.vssue]
-      enable = false
-      platform = "" # ("bitbucket", "gitea", "gitee", "github", "gitlab")
-      owner = ""
-      repo = ""
+      enable = true
+      platform = "github" # ("bitbucket", "gitea", "gitee", "github", "gitlab")
+      owner = "A7R7"
+      repo = "A7R7/A7R7.github.io"
       clientId = ""
       clientSecret = ""
     # Remark42 comment config (https://remark42.com/)
