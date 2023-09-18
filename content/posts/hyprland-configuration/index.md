@@ -35,22 +35,24 @@ Variables are "options" of hyprland. Each variable has a unique value assigned t
 
 ### Input {#input}
 
+Keyboard, mouse and touch pad input settings.
+
 ```cfg
 input {
   kb_layout = us
-    kb_variant =
-    kb_model =
-    kb_options = caps:escape,shift:both_capslock
-    kb_rules =
+  kb_variant =
+  kb_model =
+  kb_options = caps:escape,shift:both_capslock
+  kb_rules =
 
-    follow_mouse = 1
+  follow_mouse = 1
 
-    touchpad {
-      natural_scroll = true
-    }
+  touchpad {
+    natural_scroll = true
+  }
   sensitivity = 1 # -1.0 - 1.0, 0 means no modification.
-    repeat_rate = 28
-    repeat_delay = 400
+  repeat_rate = 28
+  repeat_delay = 400
 }
 ```
 
@@ -61,15 +63,13 @@ See [Configuring/Variables](https://wiki.hyprland.org/Configuring/Variables/) fo
 
 ```cfg
 general {
-# See https://wiki.hyprland.org/Configuring/Variables/ for more
-
   gaps_in = 10
-    gaps_out = 20
-    border_size = 4
-    col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
-    col.inactive_border = rgba(24283be6)
+  gaps_out = 20
+  border_size = 4
+  col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+  col.inactive_border = rgba(24283be6)
 
-    layout = dwindle
+  layout = dwindle
 # layout = master
 }
 ```
@@ -77,6 +77,7 @@ general {
 
 ### Decoration {#decoration}
 
+Configureing window decorations, including opacity, border rounding, shadow, etc.
 See [Configuring/Variables](https://wiki.hyprland.org/Configuring/Variables/) for more
 
 ```cfg
@@ -89,17 +90,30 @@ decoration {
   shadow_range = 4
   shadow_render_power = 3
   col.shadow = rgba(1a1a1aee)
- #    blur = false
+ # blur = false; # deprecated
   blur {
-    enabled = false #enable kawase window background blur bool true
-    size = 8 #blur size (distance) int 8
-    passes = 1 #the amount of passes to perform int 1
-    ignore_opacity = false #make the blur layer ignore the opacity of the window bool false
-    new_optimizations = true #whether to enable further optimizations to the blur. Recommended to leave on, as it will massively improve performance. bool true
-    xray = true #if enabled, floating windows will ignore tiled windows in their blur. Only available if blur_new_optimizations is true. Will reduce overhead on floating blur significantly. bool false
-    noise = 0.0117 #how much noise to apply. 0.0 - 1.0 float 0.0117
-    contrast = 0.8916 #contrast modulation for blur. 0.0 - 2.0 float 0.8916
-    brightness = 0.8172 #brightness modulation for blur. 0.0 - 2.0 float 0.8172
+    # enable kawase window background blur. default true
+    enabled = false
+    # blur size (distance). default 8
+    size = 8
+    # the amount of passes to perform. default 1
+    passes = 1
+    # make the blur layer ignore the opacity of the window.
+    # default false
+    ignore_opacity = false
+    # whether to enable further optimizations to the blur.
+    # massively improve performance. default true
+    new_optimizations = true
+    # make floating windows ignore tiled windows in their blur.
+    # Only available if blur_new_optimizations is true.
+    # Will reduce overhead on loating blur significantly.
+    xray = true
+    # how much noise to apply. 0.0 - 1.0. default 0.0117
+    noise = 0.0117
+    # contrast modulation for blur. 0.0 - 2.0. default 0.8916
+    contrast = 0.8916
+    # brightness  modulation for blur. 0.0 - 2.0. default 0.8172
+    brightness = 0.8172
    }
  }
 ```
@@ -107,12 +121,14 @@ decoration {
 
 ### Layout {#layout}
 
+Configuring how the windows are arranged when multiple window are tiled together in one workspace. Note that the variable [general.layout](#general) controls the global layout. You can alse set workspace rules to control per workspace layout.
+
 [Dwindle-Layout](https://wiki.hyprland.org/Configuring/Dwindle-Layout/)
 
 ```cfg
 dwindle {
   pseudotile = true # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-    preserve_split = true # you probably want this
+  preserve_split = true # you probably want this
 }
 ```
 
@@ -127,6 +143,7 @@ master {
 
 ### Gestures {#gestures}
 
+Configuring touchpad actions.
 See <https://wiki.hyprland.org/Configuring/Variables/> for more
 
 ```cfg
@@ -143,10 +160,9 @@ gestures {
 See <https://wiki.hyprland.org/Configuring/Keywords/#executing> for more
 
 ```cfg
-# Example per-device config
 device:epic mouse V1 {
-         sensitivity = -0.5
-       }
+  sensitivity = -0.5
+}
 ```
 
 
@@ -169,7 +185,7 @@ ALL arguments separated by a comma, if you want to leave one of them empty, you 
 
 ### Monitors {#monitors}
 
-My monitor information are secrets.
+My monitor information are secrets. Therefore I put it inside monitor.conf and git-ignored it.
 
 ```cfg
 source=~/.config/hypr/monitor.conf
@@ -483,18 +499,19 @@ submap = reset
 
 #### Floats {#floats}
 
+These are the windows I want to make float.
+
 ```cfg
-# floats
 windowrule = float, ^(Rofi)$
 windowrule = float, ^(wlogout)$
 windowrule = float, ^(org.gnome.Calculator)$
-windowrule = float, ^(org.gnome.Nautilus)$
 windowrule = float, ^(org.gnome.Settings)$
 windowrule = float, ^(org.gnome.design.Palette)$
 windowrule = float, ^(eww)$
 windowrule = float, ^(pavucontrol)$
 windowrule = float, ^(nm-connection-editor)$
-
+windowrule = float, ^(blueberry.py)$
+windowrulev2 = float, class:^(blueman-manager)$, title: ^(Bluetooth Devices)$
 
 windowrule = float, ^(Color Picker)$
 windowrule = float, ^(Network)$
@@ -518,19 +535,31 @@ windowrulev2 = float, class:^(vlc)$,title:^(Simple Preferences — VLC media pla
 
 #### Emacs {#emacs}
 
+Ediff
+
 ```cfg
-# emacs
-## ediff
 windowrulev2 = float, class:^(Emacs)$,title:^(Ediff)$
 windowrulev2 = noborder, class:^(Emacs)$,title:^(Ediff)$
-## minibuf
+```
+
+Minibuf
+
+```cfg
 windowrulev2 = float, class:^(emacs)$,title:^( \*Minibuf-\d+\*)$
 windowrulev2 = noborder, class:^(emacs)$,title:^( \*Minibuf-\d+\*)$
-## eaf.py
+```
+
+Eaf
+
+```cfg
 windowrule = float, class:^(python3)$, title:^(eaf.py)$
 windowrule = noanim, class:^(python3)$, title:^(eaf.py)$
 windowrule = nofocus, class:^(python3)$, title:^(eaf.py)$
-## holo_layer
+```
+
+Holo-layer
+
+```cfg
 windowrulev2 = float, class:^(python3)$, title:^(holo_layer.py)$
 windowrulev2 = nofocus, class:^(python3)$, title:^(holo_layer.py)$
 windowrulev2 = noanim, class:^(python3)$, title:^(holo_layer.py)$
@@ -542,7 +571,7 @@ windowrulev2 = noanim, class:^(python3)$, title:^(holo_layer.py)$
 Steam has a friend list window. By default when opening friends list, it will be tiled together with steam, which isn't nice. Adding this rule makes Friends list float.
 
 ```cfg
-# windowrulev2 = float, class:^(steam)$, title:^(Friends List)
+windowrulev2 = float, class:^(steam)$, title:^(Friends List)
 ```
 
 
@@ -556,15 +585,6 @@ The tooltip window's class is "", and it's floating. Therefore adding the follow
 
 ```cfg
 windowrulev2 = noinitialfocus, class:^()$, floating:1
-```
-
-
-#### ETC {#etc}
-
-```cfg
-# bluetooth
-windowrule = float, ^(blueberry.py)$
-windowrulev2 = float, class:^(blueman-manager)$, title: ^(Bluetooth Devices)$
 ```
 
 
@@ -595,7 +615,10 @@ animations {
 
 ## Pyprland {#pyprland}
 
-Pyprland hosts process for multiple Hyprland plugins.
+[Pyprland](https://github.com/hyprland-community/pyprland) is not part of hyprland. It is a community driven program that hosts process for multiple Hyprland plugins.
+It is a program, therefore you don't need to install it the plugin way.
+
+Below are configurations for pyprland. All the json codes are tangled to `pyprland.json`, and other codes are tangled to `hyprland.conf`
 
 
 ### Core {#core}
@@ -606,7 +629,7 @@ First let's launch pyprland on startup.
 exec-once = pypr
 ```
 
-Pyprland's core configuration goes to `~/.config/hypr/pyprland.json`
+Pyprland's main config goes to `~/.config/hypr/pyprland.json`
 
 ```json
 {
@@ -623,7 +646,7 @@ Pyprland's core configuration goes to `~/.config/hypr/pyprland.json`
       "lazy": true
     },
     "files": {
-      "command": "thunar",
+      "command": "nautilus",
       "animation": "fromTop",
       "lazy": true
     },
@@ -690,6 +713,19 @@ Pyprland's core configuration goes to `~/.config/hypr/pyprland.json`
 
 ### Scratchpads {#scratchpads}
 
+Scratchpads is one plugin hosted by pyprland.
+
+A scrachpad acts like a window in a special workspace, and can be toggled out by a command (`pypr toggle xxx`) or a key if bind this command to a key.
+
+However, they are different to special workspaces in several ways:
+
+1.  a scratch pad always opens a certain window (that you declared) when toggled out.
+2.  The window is not inside a special workspace. It's just a floating window with predefined size and location on the screen.
+3.  It can toggled out from 4 directions (fromTop, fromBottom, fromLeft, fromRight)
+4.  See the [scratchpads section of pyprlad wiki](https://github.com/hyprland-community/pyprland/wiki/Plugins#scratchpads) for more
+
+All the following json codes are tangled under the  "`scratchpads`" variable in `pyprland.json`
+
 
 #### Dropterm {#dropterm}
 
@@ -714,7 +750,7 @@ windowrule = size 75% 60%,$dropterm
 
 ```json
 "files": {
-  "command": "thunar",
+  "command": "nautilus",
   "animation": "fromTop",
   "lazy": true
 },
@@ -722,9 +758,9 @@ windowrule = size 75% 60%,$dropterm
 
 ```cfg
 bind = $mainMod, F2, exec, pypr toggle files
-windowrule = float,^(thunar)$
-windowrule = workspace special silent,^(thunar)$
-windowrule = size 75% 60%,^(thunar)$
+windowrule = float, ^(org.gnome.Nautilus)$
+windowrule = workspace special silent,^(org.gnome.Nautilus)$
+windowrule = size 75% 60%,^(org.gnome.Nautilus)$
 ```
 
 
