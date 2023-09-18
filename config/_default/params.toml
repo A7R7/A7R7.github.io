@@ -419,7 +419,7 @@ cacheRemoteImages = false
     # Vssue comment config (https://vssue.js.org//)
     # Vssue comment 评论系统设置 (https://vssue.js.org//)
     [page.comment.vssue]
-      enable = true
+      enable = false
       platform = "github" # ("bitbucket", "gitea", "gitee", "github", "gitlab")
       owner = "A7R7"
       repo = "A7R7/A7R7.github.io"
@@ -437,12 +437,12 @@ cacheRemoteImages = false
     # giscus comment config (https://giscus.app/)
     # giscus comment 评论系统设置 (https://giscus.app/)
     [page.comment.giscus]
-      enable = false
+      enable = true
       # owner/repo
-      dataRepo = ""
-      dataRepoId = ""
-      dataCategory = ""
-      dataCategoryId = ""
+      dataRepo = "A7R7/A7R7.github.io"
+      dataRepoId = "R_kgDOKTna1g"
+      dataCategory = "Announcements"
+      dataCategoryId = "DIC_kwDOKTna1s4CZZa9"
       dataMapping = "pathname"
       dataStrict = "0"
       dataReactionsEnabled = "1"
