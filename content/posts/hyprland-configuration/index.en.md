@@ -11,26 +11,24 @@ featuredImage: "hyprland.png"
 <!--more-->
 
 
-## Introduction {#introduction}
+## Intro {#intro}
 
 This is my hyprland literate configuration.
 Codes from hyprland.conf, pyprland.json, etc are generated from this org file,
-by running `M-x org-babel-tangle` in your emacs.
+by running `M-x org-babel-tangle` inside emacs.
 
-It's generally not recommended to edit codes in those files.
-But if you have to, don't forget to run `M-x org-babel-detangle` to update codes blocks in this org file. Also, be careful not to edit comments like those in those generated files.
+You may see comments like this in hyprland.conf, if you do not use emacs org mode, just ignore them, they are used by emacs `M-x org-babel-detangle`.
 
 ```example
 # [[file:hyprland.org::*Input][Input:1]]
 # Input:1 ends here
 ```
 
-They are essential to `M-x org-babel-detangle`.
-
 
 ## Variables {#variables}
 
 Variables are "options" of hyprland. Each variable has a unique value assigned to it.
+Basically, variables controls how your hyprland desktop looks like.
 
 
 ### Input {#input}
@@ -119,6 +117,26 @@ decoration {
 ```
 
 
+### Animations {#animations}
+
+See <https://wiki.hyprland.org/Configuring/Animations/> for more
+
+```cfg
+animations {
+    enabled = true
+    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
+    animation = windows, 1, 3, default
+    animation = windowsOut, 1, 4, default, popin 50%
+    animation = border, 1, 5, default
+    animation = borderangle, 1, 5, default
+    animation = fade, 1, 5, default
+    animation = workspaces, 1, 2, default
+    animation = specialWorkspace, 1, 2.5, default, slidevert
+    # animation = specialWorkspace, 1, 3, default, fade
+}
+```
+
+
 ### Layout {#layout}
 
 Configuring how the windows are arranged when multiple window are tiled together in one workspace. Note that the variable [general.layout](#general) controls the global layout. You can alse set workspace rules to control per workspace layout.
@@ -177,13 +195,7 @@ misc {
 ```
 
 
-## Keywords {#keywords}
-
-Keywords are not variables, but “commands” for more advanced configuring.
-ALL arguments separated by a comma, if you want to leave one of them empty, you cannot reduce the number of commas
-
-
-### Monitors {#monitors}
+## Monitors {#monitors}
 
 My monitor information are secrets. Therefore I put it inside monitor.conf and git-ignored it.
 
@@ -192,7 +204,7 @@ source=~/.config/hypr/monitor.conf
 ```
 
 
-### Executes {#executes}
+## Executes {#executes}
 
 Execute a shell script on startup of the compositor or on each time it's reloaded.
 
@@ -216,7 +228,8 @@ exec-once = wl-paste --type text --watch cliphist store #Stores only text data
 exec-once = wl-paste --type image --watch cliphist store #Stores only image data
 
 # exec-once = clash-verge;
-exec-once = pkill eww; eww daemon; eww open-many bar0 bar1 bar2;
+# exec-once = pkill eww; eww daemon; eww open-many bar0 bar1 bar2;
+exec-once = ags -b hypr
 exec-once = pkill hyprpaper; hyprpaper;
 
 # exec-once = bash -c ~/.config/hypr/bin/init.sh
@@ -226,7 +239,7 @@ exec-once = pkill hyprpaper; hyprpaper;
 ```
 
 
-### Keybinds {#keybinds}
+## Keybinds {#keybinds}
 
 
 #### Helpful variables {#helpful-variables}
@@ -251,11 +264,13 @@ $mainMod = SUPER
 # applications
 bind = $mainMod, Return, exec, kitty --single-instance
 bind = $mainMod, E, exec, thunar
-bind = $mainMod, B, exec, vivaldi-stable
+bind = $mainMod, B, exec, vivaldi-stable --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-wayland-ime %U
+
 bind = $mainMod, N, exec, neovide --multigrid
 bind = $mainMod, M, exec, emacs
 
-bind = $mainMod, R, exec, ~/.config/rofi/launcher.sh
+# no longer use rofi to launch apps, but ags's internal launcher
+# bind = $mainMod, R, exec, ~/.config/rofi/launcher.sh
 bind = $mainMod, F, exec, ~/.config/rofi/file.sh
 bind = $mainMod, V, exec, ~/.config/rofi/clipboard.sh
 
@@ -289,7 +304,7 @@ bind = $mainMod ALT, F11, fullscreen, 0
 #### Desktop Functions {#desktop-functions}
 
 ```cfg
-bind = $mainMod ALT, Delete, exec, wlogout
+# bind = $mainMod ALT, Delete, exec, wlogout
 bind = $mainMod CTRL ALT, Delete, exec, kill
 bindle = , XF86AudioRaiseVolume,    exec, pactl set-sink-volume @DEFAULT_SINK@ +1%
 bindle = , XF86AudioLowerVolume,    exec, pactl set-sink-volume @DEFAULT_SINK@ -1%
@@ -305,6 +320,37 @@ bindl  = , XF86AudioPlay,           exec, playerctl play-pause
 
 bind = CTRL ALT, F1, exec, notify-send "CTRL ALT F1"
 bind = CTRL ALT, F2, exec, notify-send "CTRL ALT F2"
+```
+
+```cfg
+# AGS
+bind = $mainMod ALT,  Delete, exec, ags -b hypr toggle-window powermenu
+bind = CTRL SHIFT, R,   exec, ags -b hypr quit; ags -b hypr
+bind = SUPER, R,        exec, ags -b hypr toggle-window applauncher
+bind = , XF86Launch4,   exec, ags -b hypr -r "ags.Service.Recorder.start()"
+bind = , XF86PowerOff,  exec, ags -b hypr toggle-window powermenu
+bind = SUPER, Tab,      exec, ags -b hypr toggle-window overview
+# bind  = , XF86Launch1, exec,
+
+# Laptop
+bindle = , XF86MonBrightnessUp,     exec, ags -b hypr -r "ags.Service.Brightness.screen += 0.05; ags.Service.Indicator.display()"
+bindle = , XF86MonBrightnessDown,   exec, ags -b hypr -r "ags.Service.Brightness.screen -= 0.05; ags.Service.Indicator.display()"
+bindle = , XF86KbdBrightnessUp,     exec, ags -b hypr -r "ags.Service.Brightness.kbd++; ags.Service.Indicator.kbd()"
+bindle = , XF86KbdBrightnessDown,   exec, ags -b hypr -r "ags.Service.Brightness.kbd--; ags.Service.Indicator.kbd()"
+bindle = , XF86AudioRaiseVolume,    exec, ags -b hypr -r "ags.Service.Audio.speaker.volume += 0.05; ags.Service.Indicator.speaker()"
+bindle = , XF86AudioLowerVolume,    exec, ags -b hypr -r "ags.Service.Audio.speaker.volume -= 0.05; ags.Service.Indicator.speaker()"
+bindl  = , XF86AudioPlay,           exec, ags -b hypr -r "ags.Service.Mpris.players.pop()?.playPause()"
+bindl  = , XF86AudioStop,           exec, ags -b hypr -r "ags.Service.Mpris.players.pop()?.stop()"
+bindl  = , XF86AudioPause,          exec, ags -b hypr -r "ags.Service.Mpris.players.pop()?.pause()"
+bindl  = , XF86AudioPrev,           exec, ags -b hypr -r "ags.Service.Mpris.players.pop()?.previous()"
+bindl  = , XF86AudioNext,           exec, ags -b hypr -r "ags.Service.Mpris.players.pop()?.next()"
+bindl  = , XF86AudioMicMute,        exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Print
+bind = ,Print, exec, ags -b hypr run-js "ags.Service.Recorder.screenshot()"
+bind = SHIFT,Print, exec, ags -b hypr run-js "ags.Service.Recorder.screenshot(true)"
+
+
 ```
 
 
@@ -330,10 +376,6 @@ bind = $mainMod, 7, execr, "$focusWorkspace $activeMonitorId"7
 bind = $mainMod, 8, execr, "$focusWorkspace $activeMonitorId"8
 bind = $mainMod, 9, execr, "$focusWorkspace $activeMonitorId"9
 bind = $mainMod, 0, execr, "$focusWorkspace $((1+$activeMonitorId))"0
-
-bind = $mainMod, i, focusmonitor, $screen1
-bind = $mainMod, o, focusmonitor, $screen2
-bind = $mainMod, p, focusmonitor, $screen3
 
 #    Move focuse inside focusing monitor
 # bind = $mainMod ALT, H, execr, "$focusWorkspace" "$activeMonitorId""$(((activeWorkspaceId-1)%10))"
@@ -386,9 +428,9 @@ bind = $mainMod SHIFT, 0, execr, "$move2Workspace" "$((1+$activeMonitorId))"0
 
 ```cfg
 #    Move window to monitor {{{
-bind = $mainMod SHIFT, F1, movewindow, mon:$screen1
-bind = $mainMod SHIFT, F2, movewindow, mon:$screen2
-bind = $mainMod SHIFT, F3, movewindow, mon:$screen3
+# bind = $mainMod SHIFT, F1, movewindow, mon:$screen1
+# bind = $mainMod SHIFT, F2, movewindow, mon:$screen2
+# bind = $mainMod SHIFT, F3, movewindow, mon:$screen3
 #}}}
 ```
 
@@ -396,7 +438,7 @@ bind = $mainMod SHIFT, F3, movewindow, mon:$screen3
 
 #    Move window to special workspace {{{
 bind = $mainMod SHIFT, S,   movetoworkspace, special
-bind = $mainMod SHIFT, F1,  movetoworkspace, special:1
+# bind = $mainMod SHIFT, F1,  movetoworkspace, special:1
 bind = $mainMod SHIFT, F2,  movetoworkspace, special:2
 bind = $mainMod SHIFT, F3,  movetoworkspace, special:3
 bind = $mainMod SHIFT, F4,  movetoworkspace, special:4
@@ -440,9 +482,8 @@ bind = $mainMod, mouse_up, workspace, e-1
 #}}}
 ```
 
--   Special workspace
 
-<!--listend-->
+#### Special workspace {#special-workspace}
 
 ```cfg
 #  Special workspace{{{
@@ -451,15 +492,15 @@ bind = $mainMod, escape, execr, hyprctl dispatch togglespecialworkspace $special
 # bind = $mainMod, F1,  togglespecialworkspace, 1
 # bind = $mainMod, F2,  togglespecialworkspace, 2
 # bind = $mainMod, F3,  togglespecialworkspace, 3
-# bind = $mainMod, F4,  togglespecialworkspace, 4
-# bind = $mainMod, F5,  togglespecialworkspace, 5
-# bind = $mainMod, F6,  togglespecialworkspace, 6
-# bind = $mainMod, F7,  togglespecialworkspace, 7
-# bind = $mainMod, F8,  togglespecialworkspace, 8
-# bind = $mainMod, F9,  togglespecialworkspace, 9
-# bind = $mainMod, F10, togglespecialworkspace, 10
-# bind = $mainMod, F11, togglespecialworkspace, 11
-# bind = $mainMod, F12, togglespecialworkspace, 12
+bind = $mainMod, F4,  togglespecialworkspace, 4
+bind = $mainMod, F5,  togglespecialworkspace, 5
+bind = $mainMod, F6,  togglespecialworkspace, 6
+bind = $mainMod, F7,  togglespecialworkspace, 7
+bind = $mainMod, F8,  togglespecialworkspace, 8
+bind = $mainMod, F9,  togglespecialworkspace, 9
+bind = $mainMod, F10, togglespecialworkspace, 10
+bind = $mainMod, F11, togglespecialworkspace, 11
+bind = $mainMod, F12, togglespecialworkspace, 12
 #}}}
 
 #}}}1
@@ -494,14 +535,16 @@ submap = reset
 ```
 
 
-### Window rules {#window-rules}
+## Window rules {#window-rules}
 
 
-#### Floats {#floats}
+##### Floats {#floats}
 
 These are the windows I want to make float.
 
 ```cfg
+windowrule = float, ^(xdg-desktop-portal)$
+windowrule = float, ^(xdg-desktop-portal-gnome)$
 windowrule = float, ^(Rofi)$
 windowrule = float, ^(wlogout)$
 windowrule = float, ^(org.gnome.Calculator)$
@@ -525,7 +568,20 @@ windowrule = float, ^(file-roller)$
 ```
 
 
-#### VLC {#vlc}
+##### X Menus {#x-menus}
+
+Some xwayland window's menu have a dim black border by default. However hyprland applys a corner rounding to it by cutting off its 4 corners, making the corner having no border, which looks strange.
+
+These menus have no class (class=""). So the following rule can disable the corner rounding for them.
+
+```cfg
+windowrulev2 = rounding 0, class:^()$, floating:1, xwayland:1
+windowrulev2 = rounding 0, class:^(GoldenDict-ng)$, floating:1, xwayland:1
+
+```
+
+
+##### VLC {#vlc}
 
 ```cfg
 windowrulev2 = float, class:^(vlc)$,title:^(Adjustments and Effects — VLC media player)$
@@ -533,7 +589,7 @@ windowrulev2 = float, class:^(vlc)$,title:^(Simple Preferences — VLC media pla
 ```
 
 
-#### Emacs {#emacs}
+##### Emacs {#emacs}
 
 Ediff
 
@@ -566,7 +622,7 @@ windowrulev2 = noanim, class:^(python3)$, title:^(holo_layer.py)$
 ```
 
 
-#### Steam {#steam}
+##### Steam {#steam}
 
 Steam has a friend list window. By default when opening friends list, it will be tiled together with steam, which isn't nice. Adding this rule makes Friends list float.
 
@@ -575,7 +631,7 @@ windowrulev2 = float, class:^(steam)$, title:^(Friends List)
 ```
 
 
-#### Bitwig Studio {#bitwig-studio}
+##### Bitwig Studio {#bitwig-studio}
 
 Bigwig Studio is a music production studio. It has buttons that are dragable. When dragging those buttons, a tiny tooltip window will float above the button showing its current value.
 
@@ -588,29 +644,9 @@ windowrulev2 = noinitialfocus, class:^()$, floating:1
 ```
 
 
-### Workspace Rules {#workspace-rules}
+## Workspace Rules {#workspace-rules}
 
 Currently I have no workspace rules.
-
-
-### Animations {#animations}
-
-See <https://wiki.hyprland.org/Configuring/Animations/> for more
-
-```cfg
-animations {
-    enabled = true
-    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-    animation = windows, 1, 3, default
-    animation = windowsOut, 1, 4, default, popin 50%
-    animation = border, 1, 5, default
-    animation = borderangle, 1, 5, default
-    animation = fade, 1, 5, default
-    animation = workspaces, 1, 2, default
-    animation = specialWorkspace, 1, 2.5, default, slidevert
-    # animation = specialWorkspace, 1, 3, default, fade
-}
-```
 
 
 ## Pyprland {#pyprland}
@@ -776,9 +812,9 @@ windowrule = size 75% 60%,^(org.gnome.Nautilus)$
 
 ```cfg
 bind = $mainMod, F3, exec, pypr toggle dict
-windowrule = float,^(GoldenDict)$
-windowrule = workspace special silent,^(GoldenDict)$
-windowrule = size 75% 60%,^(GoldenDict)$
+windowrulev2 = float, class:^(GoldenDict)$
+windowrulev2 = workspace special silent, class:^(GoldenDict)$
+windowrulev2 = size 75% 60%, class:^(GoldenDict)$
 ```
 
 

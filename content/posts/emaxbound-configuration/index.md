@@ -107,18 +107,51 @@ min (last time the config get's updated, last time I refered to the config)
 **NOTE**: elisp codes under this headline are tangled to early-init.el.
 
 Emacs load early-init.el before init.el.
-Disable byte-compile for early-init.el. According to the [emacs manual](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html), byte-compiling the init does not startup very much, and often leads to problems when you forget to recompile the file. Also, from my experience, it may lead to bugs that do not happen when not using byte-compile.
+
+Enable lexical-binding. Disable byte-compile for early-init.el.
+
+According to the [emacs manual](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html), byte-compiling the init does not startup very much, and often leads to problems when you forget to recompile the file. Also, from my experience, it may lead to bugs that do not happen when not using byte-compile.
 
 ```elisp
 ;;; -*- lexical-binding: t; no-byte-compile: t -*-
 ```
 
+Defer garbage collection in the startup process.
+
+```elisp
+(setq gc-cons-threshold most-positive-fixnum)
+;; copied from lazycat
+(setq gc-cons-percentage 0.6)
+```
+
+Prevent unwanted runtime compilation for native-comp.
+
+```elisp
+(setq native-comp-deferred-compilation nil ;; obsolete since 29.1
+      native-comp-jit-compilation nil)
+```
+
 Disable tool-bar, menu-bar and scroll-bar before they're loaded.
 
 ```elisp
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+;; Prevent flashing of unstyled modeline at startup
+(setq-default mode-line-format nil)
+```
+
+Smooth window on startup
+
+```elisp
+(setq frame-inhibit-implied-resize t)
+```
+
+Config use-package before loading use-package
+
+```elisp
+;(setq use-package-enable-imenu-support t)
+(setq use-package-verbose t)
 ```
 
 Below codes belongs to the original Borg seed.
@@ -143,6 +176,9 @@ Below codes belongs to the original Borg seed.
 
 ## Init {#init}
 
+
+### Begin of init {#begin-of-init}
+
 **NOTE**: Starting from here, elisp codes are tangled to init.el
 
 After loading early-init.el, emacs begin to load init.el.
@@ -165,26 +201,23 @@ Calculating time used loading emacs excutable, as well as setting some variables
   (setq user-init-file (or load-file-name buffer-file-name))
   (setq user-emacs-directory (file-name-directory user-init-file))
   (message "Loading %s..." user-init-file)
+)
+```
 
+Set some defaults of emacs
+
+```elisp
+(progn
   (setq inhibit-startup-buffer-menu t)
   (setq inhibit-startup-screen t)
   (setq inhibit-startup-echo-area-message "locutus")
   (setq initial-buffer-choice t)
   (setq initial-scratch-message "")
-  ;; smooth window on startup
-  (setq frame-inhibit-implied-resize t)
-  ;; Defer garbage collection further back in the startup process
-  (setq gc-cons-threshold most-positive-fixnum)
-  ;; copied from lazycat
-  (setq gc-cons-percentage 0.6)
-  ;; Prevent flashing of unstyled modeline at startup
-  (setq-default mode-line-format nil)
+  ;; This improves performance for some fonts
+  (setq inhibit-compacting-font-cache t)
   (setq confirm-kill-emacs 'y-or-n-p)
 )
 ```
-
-
-## Core units {#core-units}
 
 
 ### Borg {#borg}
@@ -194,23 +227,13 @@ Calculating time used loading emacs excutable, as well as setting some variables
 	 To skip the activation of the drone named DRONE, temporarily disable it by setting the value of the Git variable submodule.DRONE.disabled to true in ~/.config/emacs/.gitmodules.
 
 ```elisp
-(eval-and-compile ; `borg'
-  (add-to-list 'load-path (expand-file-name "lib/borg" user-emacs-directory))
-  (require 'borg)
+(use-package borg
+:init
+  (add-to-list 'load-path
+    (expand-file-name "lib/borg" user-emacs-directory))
+:config
   (borg-initialize)
 )
-```
-
-
-### Use-package {#use-package}
-
-Use-package is built-in since emacs-29. Uncomment the comment if running below29.
-
-```elisp
-(setq use-package-verbose t)
-  ;(eval-and-compile ; `use-package'
-  ;  (require  'use-package)
-  ;  (setq use-package-verbose t))
 ```
 
 
@@ -912,13 +935,17 @@ Note that for pages with variable-pitch fonts,
   (dashboard-mode . variable-pitch-mode)
   (olivetti-mode . visual-line-mode)
 :init
-  (setq-default fill-column 74)
+  (setq-default fill-column 78)
 :config
   ;If nil (the default), use the value of fill-column + 2.
   (setq olivetti-body-width nil
          olivetti-style 'fancy)
   (set-face-attribute 'olivetti-fringe nil :background "#171B24")
-
+  (defun config/window-center (width)
+    (interactive)
+    (setq fill-column width)
+    (olivetti-mode)
+  )
   (config/leader
     "tc"  '(olivetti-mode     :wk "󰉠 Center")
   )
@@ -2561,13 +2588,6 @@ This package provides visual alignment for Org Mode, Markdown and table.el table
 ```
 
 
-#### Fancy-priorities {#fancy-priorities}
-
-```elisp
-(use-package org-fancy-priorities)
-```
-
-
 #### Org-appear {#org-appear}
 
 [Org-appear](https://github.com/awth13/org-appearAutomatically) disaply emphasis markers and links when the cursor is on them.
@@ -2675,6 +2695,16 @@ Disabled cause org-modern already does the job.
 :config
   ;; if file path is not absolute
   ;; it is treated as relative path to org-directory
+  (defun org-hugo-new-subtree-post-capture-template ()
+    "Returns `org-capture' template string for new Hugo post.
+     See `org-capture-templates' for more information."
+    (let* ((title (read-from-minibuffer "Post Title: "))
+       (fname (org-hugo-slug title)))
+    (mapconcat #'identity
+        `(,(concat "* TODO " title) ":PROPERTIES:"
+          ,(concat ":EXPORT_FILE_NAME: " fname) ":END:" "%?\n")
+          ;Place the cursor here finally
+        "\n")))
   (setq org-capture-templates (append org-capture-templates '(
     ("j" "Journal" entry
       (file+datetree "journal.org")
@@ -2682,6 +2712,9 @@ Disabled cause org-modern already does the job.
     ("i" "Inbox" entry
       (file "inbox.org")
       "* %U - %? %^g\n")
+   '("h" "Hugo post" entry
+      (file+olp "capture.org" "Notes")
+      (function org-hugo-new-subtree-post-capture-template))
   )))
 )
 ```
@@ -3035,11 +3068,12 @@ Code under :config is taken from <https://emacs-china.org/t/org-mode-latex-mode/
 ### Export {#export}
 
 
-#### Basic {#basic}
+#### Ox {#ox}
 
 ```elisp
 (use-package ox
 :after org
+:defer t
 :config
   (setq
     org-export-with-toc t
@@ -3183,33 +3217,12 @@ General steps to publish a blog using hugo in emacs includes:
 
 ```elisp
 (use-package ox-hugo
+:after ox
 :commands (org-hugo-export-as-md org-hugo-export-to-md)
 :init
   (setq org-hugo-base-dir "~/Blog"
         org-hugo-front-matter-format "yaml"
   )
-:config
-
-  (defun org-hugo-new-subtree-post-capture-template ()
-    "Returns `org-capture' template string for new Hugo post.
-     See `org-capture-templates' for more information."
-    (let* ((title (read-from-minibuffer "Post Title: "))
-       (fname (org-hugo-slug title)))
-    (mapconcat #'identity
-        `(,(concat "* TODO " title) ":PROPERTIES:"
-          ,(concat ":EXPORT_FILE_NAME: " fname) ":END:" "%?\n")
-          ;Place the cursor here finally
-        "\n"
-      )
-    )
-  )
-
-  (add-to-list 'org-capture-templates
-  '("h"
-      "Hugo post"
-      entry
-    (file+olp "capture.org" "Notes")
-    (function org-hugo-new-subtree-post-capture-template)))
 )
 
 ```
@@ -3218,7 +3231,8 @@ Easy-hugo
 
 ```elisp
 (use-package easy-hugo
-  )
+:defer t
+)
 ```
 
 
